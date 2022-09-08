@@ -123,7 +123,8 @@ class ContentController extends Controller
 		$data['release_year'] = $release_year;
 		$data['ratings'] = $ratings;
 		$data['language_id'] = $language_id;
-		$data['genre_id'] = implode(',', $genre_id);
+		$data['genre_id'] = $genre_id;
+		//$data['genre_id'] = implode(',', $genre_id);
 		$data['download_link'] = $download_link;
 		$data['trailer_url'] = $trailer_url ? $trailer_url : "";
 
@@ -263,8 +264,12 @@ class ContentController extends Controller
 			$query  = Content::select('tbl_content.*', 'l.language_name')->leftjoin('tbl_language as l', 'l.language_id', 'tbl_content.language_id');
 			if ($content_type == 1) {
 				$query->where('content_type', 1);
-			} else
-            if ($content_type == 2) {
+			} 
+			elseif($content_type == 3)
+			{
+				$query->where('content_type', 3);
+			}
+			elseif ($content_type == 2) {
 				$query->where('content_type', 2);
 			}
 			$ContentData = $query->offset($start)
@@ -275,8 +280,12 @@ class ContentController extends Controller
 			$query  = Content::select('tbl_content.*', 'l.language_name')->leftjoin('tbl_language as l', 'l.language_id', 'tbl_content.language_id');
 			if ($content_type == 1) {
 				$query->where('content_type', 1);
-			} else
-            if ($content_type == 2) {
+			} 
+			elseif($content_type == 3)
+			{
+				$query->where('content_type', 3);
+			}
+			elseif ($content_type == 2) {
 				$query->where('content_type', 2);
 			}
 			$totalData = $totalFiltered = $query->count();
@@ -288,6 +297,10 @@ class ContentController extends Controller
 			} else
 			if ($content_type == 2) {
 				$query->where('tbl_content.content_type', 2);
+			}
+			else
+			if ($content_type == 3) {
+				$query->where('tbl_content.content_type', 3);
 			}
 			$query->where('tbl_content.content_id', 'LIKE', "%{$search}%")->orWhere('tbl_content.content_title', 'LIKE', "%{$search}%")
 				->orWhere('tbl_content.description', 'LIKE', "%{$search}%")
@@ -327,13 +340,13 @@ class ContentController extends Controller
 			foreach ($ContentData as $rows) {
 
 				if (!empty($rows->verticle_poster)) {
-					$verticle_poster = '<img height="60" width="60" src="' . url(env('DEFAULT_IMAGE_URL') . $rows->verticle_poster) . '">';
+					$verticle_poster = '<img height="60" width="60" src="' . url('uploads/' . $rows->verticle_poster) . '">';
 				} else {
 					$verticle_poster = '<img height="60px;" width="60px;" src="' . asset('assets/dist/img/default.png') . '">';
 				}
 
 				if (!empty($rows->horizontal_poster)) {
-					$horizontal_poster = '<img height="60" width="60" src="' . url(env('DEFAULT_IMAGE_URL') . $rows->horizontal_poster) . '">';
+					$horizontal_poster = '<img height="60" width="60" src="' . url('uploads/' . $rows->horizontal_poster) . '">';
 				} else {
 					$horizontal_poster = '<img height="60px;" width="60px;" src="' . asset('assets/dist/img/default.png') . '">';
 				}
@@ -1299,7 +1312,7 @@ class ContentController extends Controller
 					$disabled = "";
 				}
 				if (!empty($rows->episode_thumb)) {
-					$episode_thumb = '<img height="80px" width="80px" src="' . url(env('DEFAULT_IMAGE_URL') . $rows->episode_thumb) . '">';
+					$episode_thumb = '<img height="80px" width="80px" src="' . url('uploads/' . $rows->episode_thumb) . '">';
 				} else {
 					$episode_thumb = '<img height="80px;" width="80px;" src="' . asset('assets/dist/img/default.png') . '">';
 				}

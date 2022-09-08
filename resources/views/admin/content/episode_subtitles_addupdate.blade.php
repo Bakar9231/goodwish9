@@ -162,7 +162,7 @@ $(document).ready(function (){
             required: true,
           }
         },
-      },
+      
       messages: {
         language_id: {
           required: "Please Select Actor",

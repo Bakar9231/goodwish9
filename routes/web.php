@@ -79,6 +79,14 @@ Route::group(array('middleware' => 'checkRole'), function () {
         Route::get('my-profile', 'Admin\PartnerController@MyProfile')->name('partner/my-profile');
         Route::post('updateAdminProfile', 'Admin\PartnerController@updateAdminProfile')->name('partner/updateAdminProfile');
     });
+    Route::prefix('payout/request')->group(function () {
+        Route::get('list', 'Admin\AdminController@payout')->name('admin/payout/list');
+        Route::post('save', 'Admin\AdminController@save_payout')->name('admin/save_payout');
+        Route::get('detail', 'Admin\AdminController@payout_detail')->name('admin/payout_detail');
+        Route::post('addUpdatePayout', 'Admin\AdminController@addUpdatePayout')->name('admin/addUpdatePayout');
+        Route::post('deletepayout', 'Admin\AdminController@deletepayout')->name('admin/deletepayout');
+        Route::post('updatePayoutStatus', 'Admin\AdminController@updatePayoutStatus')->name('updatePayoutStatus');
+    });
 
     Route::prefix('content')->group(function () {
         Route::get('list', 'Admin\ContentController@viewListContent')->name('content/list');
@@ -116,8 +124,8 @@ Route::group(array('middleware' => 'checkRole'), function () {
         Route::post('addUpdateEpisodeSubtitles', 'Admin\ContentController@addUpdateEpisodeSubtitles')->name('addUpdateEpisodeSubtitles');
         Route::post('deleteEpisodeSubtitles', 'Admin\ContentController@deleteEpisodeSubtitles')->name('deleteEpisodeSubtitles');
 
-        Route::post('showContentCommentList', 'Admin\ContentController@showContentCommentList')->name('showContentCommentList');
-        Route::post('deleteComment', 'Admin\ContentController@deleteComment')->name('deleteComment');
+        Route::any('showContentCommentList', 'Admin\ContentController@showContentCommentList')->name('showContentCommentList');
+        Route::any('deleteComment', 'Admin\ContentController@deleteComment')->name('deleteComment');
         Route::post('changeCommentStatus', 'Admin\ContentController@changeCommentStatus')->name('changeCommentStatus');
     });
 
@@ -158,11 +166,13 @@ Route::group(array('middleware' => 'checkRole'), function () {
         Route::get('list/{season_id}/{id}', 'Admin\ContentController@viewEpisodeSource')->name('series/season/episode/source/list');
     });
     Route::prefix('series/season/episode/subtitle')->group(function () {
-        Route::get('list/{season_id}/{id}', 'Admin\ContentController@viewEpisodeSubtitles')->name('series/season/episode/subtitle/list');
+        Route::any('list/{season_id}/{id}', 'Admin\ContentController@viewEpisodeSubtitles')->name('series/season/episode/subtitle/list');
     });
     Route::prefix('series/comment')->group(function () {
         Route::get('list/{flag?}/{id}', 'Admin\ContentController@viewContentComment')->name('series/comment/list');
     });
+    
+    
     Route::prefix('genre')->group(function () {
         Route::get('list', 'Admin\GenreController@viewListGenre')->name('genre/list');
         Route::post('showGenreList', 'Admin\GenreController@showGenreList')->name('showGenreList');

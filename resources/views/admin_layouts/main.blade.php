@@ -38,8 +38,7 @@
             <nav class="navbar navbar-expand-lg main-navbar sticky">
                 <div class="form-inline mr-auto">
                     <ul class="navbar-nav mr-3">
-                        <li><a href="#" data-toggle="sidebar" class="nav-link nav-link-lg
-									collapse-btn">
+                        <li><a href="#" data-toggle="sidebar" class="nav-link nav-link-lg collapse-btn">
                                 <i data-feather="align-justify"></i></a></li>
                         <li><a href="#" class="nav-link nav-link-lg fullscreen-btn">
                                 <i data-feather="maximize"></i>
@@ -52,8 +51,14 @@
                 $data = \App\Admin::first();
                 ?>
                 <ul class="navbar-nav navbar-right">
+                <li style="    margin-top: 12px;">
+                @if(session()->get('role')== "partner")
+                    <a  href="{{route('partner/payout/list')}}" style="margin-right: 20px;color: #0ACDFF;font-size: 20px;font-weight: 800;">${{number_format(session()->get('available_income'),2)}}</a>
+                  @endif
+                </li>
                 <li class="dropdown"><a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user"> 
                   <!--<img alt="image" src="{{url(env('DEFAULT_IMAGE_URL').$data['profile_image'])}}" class="author-box-picture author-box-profile">-->
+                 
                 <img alt="image" src="{{session()->get('profile_image')}}" class="user-img-radious-style author-box-profile">
                 <span class="d-sm-none d-lg-inline-block"></span></a>
       

@@ -21,6 +21,7 @@ use App\TVCategory;
 use App\TVChannel;
 use App\Partner;
 use App\Comment;
+use App\Payout;
 use File;
 use Storage;
 use Carbon\Carbon;
@@ -341,6 +342,148 @@ class AdminController extends Controller
 			logger($json_data);
 		echo json_encode($json_data); 
         exit();
+	}
+	public function payout()
+	{
+		// dd("hello");
+		// $data = User::where('user_id',$user_id)
+		// 			->where('device_token', Session::get('referral_code'))
+		// 			->first();
+
+		// return view('partner.offers.offers');
+		try {
+			$results = array();
+			$appUserData =  Payout::all();
+			$total_partners =  Payout::count();
+
+
+			if (!empty($appUserData)) {
+				foreach ($appUserData as $rows) {
+
+
+
+					$data = (object) array(
+						'id' => $rows->id,
+						'amount' => $rows->amount,
+						'status' => $rows->status,
+						'created_at' => date('Y-m-d',strtotime($rows->created_at)),
+						'updated_at' => date('Y-m-d',strtotime( $rows->updated_at)),
+
+					);
+					array_push($results, $data);
+				}
+			}
+
+			return view("admin.payout.payout_list", [
+				'results' => $results,
+				'total_partners' => $total_partners
+			]);
+		} catch (\Exception $e) {
+			$response_array = array('success' => false, 'error' => $e->getMessage(), 'line' => $e->getLine());
+			$response = Response::json($response_array, 200);
+			return $response;
+		}
+	}
+	public function save_payout(Request $request)
+	{
+		$input = $request->except('_token');
+		$input['user_id'] =1;
+			$result =  Payout::insert($input);
+			$msg = "Added";
+			$response['flag'] = 1;
+		
+		$total_payout = Payout::count();
+		if ($result) {
+			$response['success'] = 1;
+			$response['message'] = "Successfully " . $msg;
+			$response['total_payout'] = $total_payout;
+		} else {
+			$response['success'] = 0;
+			$response['message'] = "Error While " . $msg;
+		}
+		echo json_encode($response);
+	}
+	public function deletepayout(Request $request)
+	{
+		try {
+			Payout::where('id', $request->id)->delete();
+			return response()->json([
+				'success' => true,
+				'message' => 'User Deleted Successfully'
+			]);
+		} catch (\Throwable $th) {
+			return response()->json([
+				'success' => false,
+				'message' => 'Something Wrong'
+			]);
+		}
+	}
+	public function payout_detail(Request $request)
+	{
+		try {
+			$payout = Payout::find($request->id);
+			return response()->json([
+				'success' => true,
+				'payout' => $payout
+			]);
+		} catch (\Throwable $th) {
+			return response()->json([
+				'success' => false,
+				'message' => 'Something Wrong'
+			]);
+		}
+	}
+	public function addUpdatePayout(Request $request)
+	{
+		$id = $request->input('id');
+		$input = $request->except('_token');
+
+		if (!empty($id)) {
+			$result =  Payout::find($id);
+			$result->update($input);
+			$msg = "Updated";
+			$response['flag'] = 2;
+		}
+		$total_payout = Payout::count();
+		if ($result) {
+			$response['success'] = 1;
+			$response['message'] = "Successfully " . $msg;
+			$response['total_payout'] = $total_payout;
+		} else {
+			$response['success'] = 0;
+			$response['message'] = "Error While " . $msg;
+		}
+		echo json_encode($response);
+	}
+	public function updatePayoutStatus(Request $request)
+	{
+		$status = $request->get('status');
+		$id = $request->get('id');
+		$response = [];
+
+		if (isset($status)) {
+			if ($status == 1) {
+				$query =  Payout::find($id);
+				$query->status = 1;
+				$query->save();
+				$status = 1;
+			} else {
+				$query =  Payout::find($id);
+				$query->status = 0;
+				$query->save();
+				$status = 0;
+			}
+			if ($query) {
+				$response['success'] = 1;
+				$response['message'] = "Successfully updated.";
+				$response['status'] = $status;
+			} else {
+				$response['success'] = 0;
+				$response['message'] = "Error while updating.";
+				$response['status'] = $status;
+			}
+		}
+		echo json_encode($response);
 	}
 
 	

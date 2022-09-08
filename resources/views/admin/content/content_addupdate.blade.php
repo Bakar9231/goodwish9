@@ -212,13 +212,13 @@ input:checked + .slider:before {
             <div class="form-row">
                 <div class="col-md-4" id="verticle_poster_preview">
                   @if($data && $data['verticle_poster'])
-                    <div class="borderwrap" data-href="@if($data && $data['verticle_poster']){{$data['verticle_poster']}}@endif"><div class="filenameupload"><img src="@if($data && $data['verticle_poster']){{url(env('DEFAULT_IMAGE_URL').$data['verticle_poster'])}}@endif" width="300" height="500">  </div></div>
+                    <div class="borderwrap" data-href="@if($data && $data['verticle_poster']){{$data['verticle_poster']}}@endif"><div class="filenameupload"><img src="@if($data && $data['verticle_poster']){{url('uploads/'.$data['verticle_poster'])}}@endif" width="300" height="500">  </div></div>
                   @endif
                 </div>
 
                 <div class="col-md-8" id="horizontal_poster_preview">
                   @if($data && $data['horizontal_poster'])
-                    <div class="borderwrap" data-href="@if($data && $data['horizontal_poster']){{$data['horizontal_poster']}}@endif"><div class="filenameupload"><img src="@if($data && $data['horizontal_poster']){{url(env('DEFAULT_IMAGE_URL').$data['horizontal_poster'])}}@endif" width="750" height="500">  </div></div>
+                    <div class="borderwrap" data-href="@if($data && $data['horizontal_poster']){{$data['horizontal_poster']}}@endif"><div class="filenameupload"><img src="@if($data && $data['horizontal_poster']){{url('uploads/'.$data['horizontal_poster'])}}@endif" width="750" height="500">  </div></div>
                   @endif
                 </div>               
                

@@ -69,57 +69,7 @@
 </style>
 @stop
 @section('content')
-<section class="section">
- 
-    <div class="row">
-      <div class="col-md-3">
-        <div class="card" >
-         
-          <div class="card-body">
-            <h5 class="card-title">Net Income</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a style="font-size: 38px;font-weight: 800;" >$ {{$netincome}}</a>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="card" >
-         
-          <div class="card-body">
-            <h5 class="card-title">Widthdrawn</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a  style="font-size: 38px;font-weight: 800;" >$ {{$widthdraw}}</a>
-          </div>
-        </div>
-      </div>
 
-      <div class="col-md-3">
-        <div class="card" >
-         
-          <div class="card-body">
-            <h5 class="card-title">Pending</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a  style="font-size: 38px;font-weight: 800;"  >$ {{$pending}}</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-3">
-        <div class="card">
-         
-          <div class="card-body">
-            <h5 class="card-title">Available</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a style="font-size: 38px;font-weight: 800;" >$ {{$available}}</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-</section>
-<div class="buttons  pull-right-1">
-                    <button class="btn btn-primary text-light" data-toggle="modal" data-target="#partnerModal" data-whatever="@mdo">Request  Widthdraw</button>
-                  </div><br><br><br><br>
 <section class="section">
   <div class="section-body">
     <div class="row">
@@ -141,7 +91,9 @@
 
               <table id="partner" class="table table-striped table-sm display" style="width:100%">
                 <div class="pull-right">
-                 
+                  <div class="buttons  pull-right-1">
+                    <!-- <button class="btn btn-primary text-light" data-toggle="modal" data-target="#partnerModal" data-whatever="@mdo">Add Payout</button> -->
+                  </div>
                 </div>
                 <thead>
                   <tr>
@@ -158,13 +110,11 @@
                   <tr>
                     <td>{{ $detail->id }}</td>
                     <td>$ {{ $detail->amount }}</td>
-                    <td>
-                      @if($detail->status == 1)
-                      Approved
+                    <td> @if($detail->status == 1)
+                        <span class="badge badge-success">Paid</span>
                       @else
-                      Pending
-                      @endif
-                    </td>
+                      <span class="badge badge-danger">Pending</span>
+                      @endif</td>
                     <td>{{ $detail->created_at }}</td>
                     <td>{{ $detail->updated_at }}</td>
                     <!-- <td style="text-align: center">
@@ -188,7 +138,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="ModalLabel"> Enter Ammount </h5>
+        <h5 class="modal-title" id="ModalLabel"> Add Partner </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -198,7 +148,7 @@
         <div class="modal-body">
           <div class="form-group">
             <label for="name">Amount</label>
-            <input id="amount" required name="amount" type="text" class="form-control form-control-danger" placeholder="Enter amount">
+            <input id="amount" name="amount" type="text" class="form-control form-control-danger" placeholder="Enter amount">
           </div>
 
         </div>
@@ -257,10 +207,10 @@
 
 <script>
   function editPartnerModal(id) {
-
+    
     $.ajax({
       type: "GET",
-      url: "{{route('partner/payout_detail')}}",
+      url: "{{route('admin/payout_detail')}}",
       data: {
         id: id
       },
@@ -269,10 +219,10 @@
       success: function(data) {
         console.log(data);
         if (data.success == true) {
-
+            
           $("#upd-id").val(data.payout.id);
           $("#upd-amount").val(data.payout.amount);
-
+         
           console.log(data.payout.amount);
           $("#partnerEditModal").modal('show');
         }
@@ -415,7 +365,7 @@
         var formdata = new FormData($("#updatepartner")[0]);
         $('.loader').show();
         $.ajax({
-          url: '{{ route("addUpdatePayout") }}',
+          url: '{{ route("admin/addUpdatePayout") }}',
           type: 'POST',
           data: formdata,
           dataType: "json",
@@ -432,7 +382,7 @@
                 message: data.message,
                 position: 'topRight'
               });
-              window.location = '{{ route("partner/payout/list") }}';
+              window.location = '{{ route("admin/payout/list") }}';
             } else {
               iziToast.error({
                 title: 'Error!',
@@ -464,7 +414,7 @@
         var formdata = new FormData($("#addUpdatePartner")[0]);
         $('.loader').show();
         $.ajax({
-          url: '{{ route("save_payout") }}',
+          url: '{{ route("admin/save_payout") }}',
           type: 'POST',
           data: formdata,
           dataType: "json",
@@ -481,7 +431,7 @@
                 message: data.message,
                 position: 'topRight'
               });
-              window.location = '{{ route("partner/payout/list") }}';
+              window.location = '{{ route("admin/payout/list") }}';
             } else {
               iziToast.error({
                 title: 'Error!',
@@ -511,57 +461,57 @@
 
   });
 
-  function updateStatus(status, id) {
+  function updateStatus(status,id) {
     var status = status;
     var id = id;
-    if (confirm("Are you sure to update partner status?") == true) {
+      if (confirm("Are you sure to update partner status?") == true) {
 
-      $('.loader').show();
-      $.ajax({
-        type: 'POST',
-        url: '{{ route("updatePartnerStatus") }}',
-        dataType: 'json',
-        data: {
-          "_token": "{{ csrf_token() }}",
-          id: id,
-          status: status
-        },
-      }).done(function(response) {
-        $('.loader').hide();
-        if (data.success == 1) {
-          $('#partnerStatus').val(data.status);
-          iziToast.success({
-            title: 'Success!',
-            message: data.message,
-            position: 'topRight'
-          });
-        } else {
-          iziToast.error({
-            title: 'Error!',
-            message: data.message,
-            position: 'topRight'
-          });
-        }
+        $('.loader').show();
+        $.ajax({
+          type: 'POST',
+          url: '{{ route("updatePayoutStatus") }}',
+          dataType: 'json',
+          data: {
+            "_token": "{{ csrf_token() }}",
+            id: id,
+            status: status
+          },
+        }).done(function(response) {
+          $('.loader').hide();
+          if (response.success == 1) {
+            $('#partnerStatus').val(response.status);
+            iziToast.success({
+              title: 'Success!',
+              message: response.message,
+              position: 'topRight'
+            });
+          } else {
+            iziToast.error({
+              title: 'Error!',
+              message: response.message,
+              position: 'topRight'
+            });
+          }
 
-      }).fail(function(error) {
-        console.log(error);
-        alert('Something went wrong..Check browser console');
-      }); // Ajax Call
+        }).fail(function(error) {
+          console.log(error);
+          alert('Something went wrong..Check browser console');
+        }); // Ajax Call
 
-    } else {
-      var switchStatus = false;
-      $("#partnerStatus").on('change', function() {
-        if ($(this).is(':checked')) {
-          switchStatus = $(this).is(':checked');
-          alert(switchStatus); // To verify
-        } else {
-          switchStatus = $(this).is(':checked');
-          alert(switchStatus); // To verify
-        }
-      });
-    }
+      } else {
+        var switchStatus = false;
+        $("#partnerStatus").on('change', function() {
+          if ($(this).is(':checked')) {
+            switchStatus = $(this).is(':checked');
+            alert(switchStatus); // To verify
+          } else {
+            switchStatus = $(this).is(':checked');
+            alert(switchStatus); // To verify
+          }
+        });
+      }
 
-
+    
   }
 
   function onlyNumberKey(evt) {
@@ -604,7 +554,7 @@
 
           $.ajax({
             type: "POST",
-            url: "{{route('partner/deletepayout')}}",
+            url: "{{route('admin/deletepayout')}}",
 
             data: {
               '_token': "{{csrf_token()}}",

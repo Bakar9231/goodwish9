@@ -96,7 +96,7 @@
                     <div class="col-md-4">
                         <div class="episode_thumb_preview">
                         @if($data && $data['episode_thumb'])
-                            <div class="borderwrap" data-href="@if($data && $data['episode_thumb']){{$data['episode_thumb']}}@endif"><div class="filenameupload"><img src="@if($data && $data['episode_thumb']){{url(env('DEFAULT_IMAGE_URL').$data['episode_thumb'])}}@endif" width="300" height="300">  </div></div>
+                            <div class="borderwrap" data-href="@if($data && $data['episode_thumb']){{$data['episode_thumb']}}@endif"><div class="filenameupload"><img src="@if($data && $data['episode_thumb']){{url('uploads/'.$data['episode_thumb'])}}@endif" width="300" height="300">  </div></div>
                         @endif
                         </div>
                     </div>

@@ -19,7 +19,7 @@
             <li class="dropdown {{ active_class(['dashboard']) }}">
                 <a href="{{ url('/dashboard') }}" class="nav-link"><i
                         data-feather="monitor"></i><span>Dashboard</span></a>
-            </li>
+            </li>  
             <li class="dropdown {{ active_class(['user*']) }}">
                 <a href="{{ url('/user/list') }}" class="nav-link"><i data-feather="users"></i><span>App User</span></a>
             </li>
@@ -39,6 +39,9 @@
                 <a href="{{ url('/offer/list') }}" class="nav-link"><i
                         data-feather="video"></i><span>Add Offer</span></a>
             </li>
+            <li class="dropdown {{ active_class(['payout/request*']) }}">
+                    <a href="{{url('payout/request/list')}}" class="nav-link"><i data-feather="percent"></i><span>Payout Request</span></a>
+                </li>
 
             <!-- <li class="dropdown {{ request()->is('tv/channel*') ? 'active' : '' }}">
                 <a href="{{ url('/tv/channel/list') }}" class="nav-link"><i data-feather="tv"></i><span>Live TV
@@ -125,7 +128,7 @@
                 <li class="dropdown {{ active_class(['user*']) }}">
                     <a href="{{ url('partner/offers/list') }}" class="nav-link"><i data-feather="percent"></i><span>Offers</span></a>
                 </li>
-                <li class="dropdown {{ active_class(['user*']) }}">
+                <li class="dropdown {{ active_class(['partner*']) }}">
                     <a href="{{route('partner/payout/list')}}" class="nav-link"><i data-feather="percent"></i><span>Payout Request</span></a>
                 </li>
                 <li class="dropdown {{ active_class(['user*']) }}">

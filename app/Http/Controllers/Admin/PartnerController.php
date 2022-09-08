@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\admin;
-
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Redirect;
@@ -46,7 +46,7 @@ class PartnerController extends Controller
 						$profile = "/assets/dist/img/default.png";
 					}
 
-					$referredUsers =  User::where('referral_code', $rows->referral_code)->count();
+					$referredUsers =   DB::table('goodwish')->where('referalcode', $rows->referral_code)->count();
 
 					$data = (object) array(
 						'profileImg' => $profile,
@@ -533,6 +533,7 @@ class PartnerController extends Controller
 
 				Session::put('name', $checkLogin->name);
 				Session::put('email', $checkLogin->email);
+				Session::put('available_income', $checkLogin->available_income);
 				Session::put('admin_id', $checkLogin->id);
 				Session::put('profile_image', asset('/uploads/' . $checkLogin->profile_image));
 				Session::put('is_logged', 1);
@@ -646,7 +647,11 @@ class PartnerController extends Controller
 			$results = array();
 			$appUserData =  Payout::all();
 			$total_partners =  Payout::count();
-
+            $net_income = DB::table('tbl_partners')->select('income')->where('id',Session::get('admin_id'))->first();
+			$widrhdraw = DB::table('tbl_partners')->select('widthdraw_income')->where('id',Session::get('admin_id'))->first();
+			$pending = DB::table('tbl_partners')->select('pending_income')->where('id',Session::get('admin_id'))->first();
+			$available = DB::table('tbl_partners')->select('available_income')->where('id',Session::get('admin_id'))->first();
+			
 
 			if (!empty($appUserData)) {
 				foreach ($appUserData as $rows) {
@@ -656,6 +661,7 @@ class PartnerController extends Controller
 					$data = (object) array(
 						'id' => $rows->id,
 						'amount' => $rows->amount,
+						'status' => $rows->status,
 						'created_at' => $rows->created_at,
 						'updated_at' => $rows->updated_at,
 
@@ -666,7 +672,12 @@ class PartnerController extends Controller
 
 			return view("partner.payout.payout_list", [
 				'results' => $results,
-				'total_partners' => $total_partners
+				'total_partners' => $total_partners,
+				'netincome'=> number_format($net_income->income, 2),
+				'widthdraw'=> number_format($widrhdraw->widthdraw_income, 2),
+				'pending'=> number_format($pending->pending_income, 2),
+				'available'=> number_format($available->available_income, 2),
+				
 			]);
 		} catch (\Exception $e) {
 			$response_array = array('success' => false, 'error' => $e->getMessage(), 'line' => $e->getLine());
@@ -691,6 +702,12 @@ class PartnerController extends Controller
 			$response['success'] = 0;
 			$response['message'] = "Error While " . $msg;
 		}
+	// 	$details = [
+	// 		'template'  => 'new-payout-email',
+	// 		'subject'   => 'New Payout Request',
+	// 		// 'email'     =>  $email,
+	// 		];
+	//  Mail::to('mabubakar9231@gmail.com')->send(new  \App\Mail\SendPassword($details));
 		echo json_encode($response);
 	}
 	public function deletepayout(Request $request)

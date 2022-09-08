@@ -290,7 +290,7 @@ $(document).ready(function (){
     'ajax': {
         'url':'{{ route("showContentList") }}',
         'data': function(data){
-          data.content_type = 2;
+          data.content_type = 3;
         }
     }
   });
